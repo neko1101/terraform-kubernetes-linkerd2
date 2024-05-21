@@ -9,3 +9,4 @@ A non-official Linkerd2 Terraform Module
 4. cni toggle
 5. viz toggle
 6. jaeger toggle
+7. viz ingress toggle
