@@ -8,8 +8,8 @@ resource "tls_self_signed_cert" "linkerd_root_ca" {
   is_ca_certificate     = true
   set_subject_key_id    = true
   validity_period_hours = 175200 # 20 years
-  dns_names = ["root.linkerd.cluster.local"]
-  
+  dns_names             = ["root.linkerd.cluster.local"]
+
   subject {
     common_name = "root.linkerd.cluster.local"
   }
@@ -22,7 +22,7 @@ resource "tls_self_signed_cert" "linkerd_root_ca" {
 
 resource "kubernetes_secret" "linkerd_root_ca" {
   metadata {
-    name = "linkerd-trust-anchor"
+    name      = "linkerd-trust-anchor"
     namespace = kubernetes_namespace.linkerd.id
   }
 
@@ -37,14 +37,14 @@ resource "kubernetes_secret" "linkerd_root_ca" {
 resource "kubernetes_manifest" "linkerd_root_ca_issuer" {
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "Issuer"
+    "kind"       = "Issuer"
     "metadata" = {
-      "name" = "linkerd-trust-anchor"
+      "name"      = "linkerd-trust-anchor"
       "namespace" = "${kubernetes_namespace.linkerd.id}"
     }
-    "spec" ={
+    "spec" = {
       "ca" = {
-        "secretName": "${kubernetes_secret.linkerd_root_ca.metadata[0].name}"
+        "secretName" : "${kubernetes_secret.linkerd_root_ca.metadata[0].name}"
       }
     }
   }
@@ -52,17 +52,17 @@ resource "kubernetes_manifest" "linkerd_root_ca_issuer" {
 
 resource "kubernetes_manifest" "linkerd_identity_issuer_certificate" {
   computed_fields = ["spec.duration", "spec.renewBefore", "spec.isCA"]
-  
+
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "Certificate"
+    "kind"       = "Certificate"
     "metadata" = {
-      "name" = "linkerd-identity-issuer"
+      "name"      = "linkerd-identity-issuer"
       "namespace" = "${kubernetes_namespace.linkerd.id}"
     }
     "spec" = {
-      "secretName" = "linkerd-identity-issuer"
-      "duration" = "48h0m0s"
+      "secretName"  = "linkerd-identity-issuer"
+      "duration"    = "48h0m0s"
       "renewBefore" = "6h0m0s"
       "issuerRef" = {
         "name" = "linkerd-trust-anchor"
@@ -85,7 +85,7 @@ resource "kubernetes_manifest" "linkerd_identity_issuer_certificate" {
     }
   }
 
-  depends_on = [ kubernetes_manifest.linkerd_root_ca_issuer ]
+  depends_on = [kubernetes_manifest.linkerd_root_ca_issuer]
 }
 
 resource "time_sleep" "wait_control_plane_certificate_provisioning" {
