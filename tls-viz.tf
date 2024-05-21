@@ -8,8 +8,8 @@ resource "tls_self_signed_cert" "linkerd_viz_root_ca" {
   is_ca_certificate     = true
   set_subject_key_id    = true
   validity_period_hours = 175200 # 20 years
-  dns_names = ["webhook.linkerd.cluster.local"]
-  
+  dns_names             = ["webhook.linkerd.cluster.local"]
+
   subject {
     common_name = "webhook.linkerd.cluster.local"
   }
@@ -22,7 +22,7 @@ resource "tls_self_signed_cert" "linkerd_viz_root_ca" {
 
 resource "kubernetes_secret" "linkerd_viz_root_ca" {
   metadata {
-    name = "webhook-issuer-tls"
+    name      = "webhook-issuer-tls"
     namespace = kubernetes_namespace.linkerd_viz.id
   }
 
@@ -37,14 +37,14 @@ resource "kubernetes_secret" "linkerd_viz_root_ca" {
 resource "kubernetes_manifest" "linkerd_viz_issuer" {
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "Issuer"
+    "kind"       = "Issuer"
     "metadata" = {
-      "name" = "webhook-issuer"
+      "name"      = "webhook-issuer"
       "namespace" = "${kubernetes_namespace.linkerd_viz.id}"
     }
-    "spec" ={
+    "spec" = {
       "ca" = {
-        "secretName": "${kubernetes_secret.linkerd_viz_root_ca.metadata[0].name}"
+        "secretName" : "${kubernetes_secret.linkerd_viz_root_ca.metadata[0].name}"
       }
     }
   }
@@ -55,14 +55,14 @@ resource "kubernetes_manifest" "linkerd_viz_certificate" {
 
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "Certificate"
+    "kind"       = "Certificate"
     "metadata" = {
-      "name" = "tap"
+      "name"      = "tap"
       "namespace" = "${kubernetes_namespace.linkerd_viz.id}"
     }
     "spec" = {
-      "secretName" = "tap-k8s-tls"
-      "duration" = "24h0m0s"
+      "secretName"  = "tap-k8s-tls"
+      "duration"    = "24h0m0s"
       "renewBefore" = "1h0m0s"
       "issuerRef" = {
         "name" = "webhook-issuer"
@@ -82,7 +82,7 @@ resource "kubernetes_manifest" "linkerd_viz_certificate" {
     }
   }
 
-  depends_on = [ kubernetes_manifest.linkerd_viz_issuer ]
+  depends_on = [kubernetes_manifest.linkerd_viz_issuer]
 }
 
 resource "kubernetes_manifest" "linkerd_tap_injector_certificate" {
@@ -90,14 +90,14 @@ resource "kubernetes_manifest" "linkerd_tap_injector_certificate" {
 
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "Certificate"
+    "kind"       = "Certificate"
     "metadata" = {
-      "name" = "linkerd-tap-injector"
+      "name"      = "linkerd-tap-injector"
       "namespace" = "${kubernetes_namespace.linkerd_viz.id}"
     }
     "spec" = {
-      "secretName" = "tap-injector-k8s-tls"
-      "duration" = "24h0m0s"
+      "secretName"  = "tap-injector-k8s-tls"
+      "duration"    = "24h0m0s"
       "renewBefore" = "1h0m0s"
       "issuerRef" = {
         "name" = "webhook-issuer"
@@ -116,8 +116,8 @@ resource "kubernetes_manifest" "linkerd_tap_injector_certificate" {
       ]
     }
   }
-  
-  depends_on = [ kubernetes_manifest.linkerd_viz_issuer ]
+
+  depends_on = [kubernetes_manifest.linkerd_viz_issuer]
 }
 
 resource "time_sleep" "wait_viz_certificate_provisioning" {
