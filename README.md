@@ -10,3 +10,4 @@ A non-official Linkerd2 Terraform Module
 5. viz toggle
 6. jaeger toggle
 7. viz ingress toggle
+8. modular self-sign tls commonname

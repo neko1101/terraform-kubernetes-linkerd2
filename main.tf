@@ -1,22 +1,12 @@
 ## Linkerd crds
 resource "helm_release" "linkerd_crds" {
   name = "linkerd-crds"
-  repository = "https://helm.linkerd.io/stable"
+  repository = local.linkerd_repository[var.linkerd_repository]
   chart = "linkerd-crds"
-  version = "1.8.0"
+  version = var.crds_helm_vesion
   namespace = kubernetes_namespace.linkerd.id
   create_namespace = false  
 }
-
-## Linkerd cni
-# resource "helm_release" "linkerd_cni" {
-#   name = "linkerd-cni"
-#   repository = "https://helm.linkerd.io/stable"
-#   chart = "linkerd2-cni"
-#   version = "30.12.2"
-#   namespace = kubernetes_namespace.linkerd.id
-#   create_namespace = false  
-# }
 
 ## Cert data
 data "kubernetes_secret" "linkerd_identity_issuer_certificate" {
@@ -76,9 +66,9 @@ data "kubernetes_secret" "linkerd_tap_injector_certificate" {
 ## Linkerd Control Plane
 resource "helm_release" "linkerd_control_plane" {
   name = "linkerd-control-plane"
-  repository = "https://helm.linkerd.io/stable"
+  repository = local.linkerd_repository[var.linkerd_repository]
   chart = "linkerd-control-plane"
-  version = "1.16.11"
+  version = var.control_plane_helm_version
   namespace = kubernetes_namespace.linkerd.id
   create_namespace = false
 
@@ -149,9 +139,9 @@ resource "helm_release" "linkerd_control_plane" {
 ## Linkerd Viz
 resource "helm_release" "linkerd_viz" {
   name = "linkerd-viz"
-  repository = "https://helm.linkerd.io/stable"
+  repository = local.linkerd_repository[var.linkerd_repository]
   chart = "linkerd-viz"
-  version = "30.12.11"
+  version = var.viz_helm_version
   namespace = kubernetes_namespace.linkerd_viz.id
   create_namespace = false  
 

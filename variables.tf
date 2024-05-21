@@ -6,45 +6,37 @@ variable "kubernetes" {
   })
 }
 
-variable "namespace" {
+variable "linkerd_repository" {
+  description = "stable | edge | enterprise"  
   type    = string
+  default = "stable"
+}
+
+variable "control_plane_helm_version" {
+  description = "Control plane helm version"
+  type = string
+  default = "1.16.11"
+}
+variable "control_plane_namespace" {
+  description = "Control plane namespace"
+  type = string
   default = "linkerd"
 }
 
-variable "helm_repository" {
-  type    = string
-  default = "https://helm.linkerd.io/stable"
+variable "viz_helm_version" {
+  description = "Viz helm version"
+  type = string
+  default = "30.12.11"
 }
 
-variable "helm_release_name" {
-  type    = string
-  default = "linkerd"
+variable "viz_namespace" {
+  description = "Viz namespace"
+  type = string
+  default = "linkerd-viz"
 }
 
-variable "helm_release_values" {
-  type    = list(string)
-  default = []
-}
-
-variable "helm_release_viz_values" {
-  type    = list(string)
-  default = []
-}
-
-variable "linkerd_chart_version" {
-  type    = string
-  default = "2.10.0"
-}
-
-variable "trust_anchor_certificate_validity_period_hours" {
-  type = number
-  # 10 years
-  default     = 87600
-  description = "duration for the trust anchor certificate in hours (the certificate must be rotated manually after the expiration)"
-}
-
-variable "issuer_certificate_validity_period_hours" {
-  type        = number
-  default     = 8760
-  description = "duration for the issuer certificate in hours (the certificate will be rotated by cert-manager after the expiration)"
+variable "crds_helm_vesion" {
+  description = "Crds helm version"
+  type = string
+  default = "1.8.0"
 }
