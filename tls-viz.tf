@@ -7,7 +7,7 @@ resource "tls_self_signed_cert" "linkerd_viz_root_ca" {
   private_key_pem       = tls_private_key.linkerd_viz_private_key.private_key_pem
   is_ca_certificate     = true
   set_subject_key_id    = true
-  validity_period_hours = 175200 # 20 years
+  validity_period_hours = var.viz_ca_validity
   dns_names             = ["webhook.linkerd.cluster.local"]
 
   subject {
@@ -62,8 +62,8 @@ resource "kubernetes_manifest" "linkerd_viz_certificate" {
     }
     "spec" = {
       "secretName"  = "tap-k8s-tls"
-      "duration"    = "24h0m0s"
-      "renewBefore" = "1h0m0s"
+      "duration"    = "${var.viz_cert_duration}"
+      "renewBefore" = "${var.viz_cert_renew_before}"
       "issuerRef" = {
         "name" = "webhook-issuer"
         "kind" = "Issuer"
@@ -97,8 +97,8 @@ resource "kubernetes_manifest" "linkerd_tap_injector_certificate" {
     }
     "spec" = {
       "secretName"  = "tap-injector-k8s-tls"
-      "duration"    = "24h0m0s"
-      "renewBefore" = "1h0m0s"
+      "duration"    = "${var.viz_cert_duration}"
+      "renewBefore" = "${var.viz_cert_renew_before}"
       "issuerRef" = {
         "name" = "webhook-issuer"
         "kind" = "Issuer"
