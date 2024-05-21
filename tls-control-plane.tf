@@ -7,7 +7,7 @@ resource "tls_self_signed_cert" "linkerd_root_ca" {
   private_key_pem       = tls_private_key.linkerd_private_key.private_key_pem
   is_ca_certificate     = true
   set_subject_key_id    = true
-  validity_period_hours = 175200 # 20 years
+  validity_period_hours = var.control_plane_ca_validity
   dns_names             = ["root.linkerd.cluster.local"]
 
   subject {
@@ -62,8 +62,8 @@ resource "kubernetes_manifest" "linkerd_identity_issuer_certificate" {
     }
     "spec" = {
       "secretName"  = "linkerd-identity-issuer"
-      "duration"    = "48h0m0s"
-      "renewBefore" = "6h0m0s"
+      "duration"    = "${var.control_plane_cert_duration}"
+      "renewBefore" = "${var.control_plane_cert_renew_before}"
       "issuerRef" = {
         "name" = "linkerd-trust-anchor"
         "kind" = "Issuer"

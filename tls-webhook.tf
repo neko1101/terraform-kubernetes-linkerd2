@@ -7,7 +7,7 @@ resource "tls_self_signed_cert" "linkerd_webhook_root_ca" {
   private_key_pem       = tls_private_key.linkerd_private_key.private_key_pem
   is_ca_certificate     = true
   set_subject_key_id    = true
-  validity_period_hours = 175200 # 20 years
+  validity_period_hours = var.webhook_ca_validity
   dns_names             = ["webhook.linkerd.cluster.local"]
 
   subject {
@@ -62,8 +62,8 @@ resource "kubernetes_manifest" "linkerd_policy_validator_certificate" {
     }
     "spec" = {
       "secretName"  = "linkerd-policy-validator-k8s-tls"
-      "duration"    = "24h0m0s"
-      "renewBefore" = "1h0m0s"
+      "duration"    = "${var.webhook_cert_duration}"
+      "renewBefore" = "${var.webhook_cert_renew_before}"
       "issuerRef" = {
         "name" = "webhook-issuer"
         "kind" = "Issuer"
@@ -98,8 +98,8 @@ resource "kubernetes_manifest" "linkerd_proxy_injector_certificate" {
     }
     "spec" = {
       "secretName"  = "linkerd-proxy-injector-k8s-tls"
-      "duration"    = "24h0m0s"
-      "renewBefore" = "1h0m0s"
+      "duration"    = "${var.webhook_cert_duration}"
+      "renewBefore" = "${var.webhook_cert_renew_before}"
       "issuerRef" = {
         "name" = "webhook-issuer"
         "kind" = "Issuer"
@@ -133,8 +133,8 @@ resource "kubernetes_manifest" "linkerd_sp_validator_certificate" {
     }
     "spec" = {
       "secretName"  = "linkerd-sp-validator-k8s-tls"
-      "duration"    = "24h0m0s"
-      "renewBefore" = "1h0m0s"
+      "duration"    = "${var.webhook_cert_duration}"
+      "renewBefore" = "${var.webhook_cert_renew_before}"
       "issuerRef" = {
         "name" = "webhook-issuer"
         "kind" = "Issuer"

@@ -79,7 +79,7 @@ resource "helm_release" "linkerd_control_plane" {
 
   set {
     name  = "cniEnabled"
-    value = "true"
+    value = "false"
   }
 
   set {
