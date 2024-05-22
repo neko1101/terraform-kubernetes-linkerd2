@@ -1,16 +1,32 @@
-# terraform-kubernetes-linkerd2
-A non-official Linkerd2 Terraform Module
+# Terraform Kubernetes Linkerd2
+An unofficial Linkerd2 Terraform Module for Kubernetes Cluster
 
+# Dependency
+  - Cert manager must be enabled in your cluster.
 
-# TODO
-1. terraform-docs
-2. automated lint
-3. publish to tf registry
-4. cni toggle
-5. viz toggle
-6. jaeger toggle
-7. viz ingress toggle
-8. modular self-sign tls commonname
+# How to use?
+1. Setup module.
+```
+module "linkerd2" {
+  source  = "neko1101/linkerd2/kubernetes"
+  version = "1.0.0"
+}
+```
+2. Apply
+```
+terraform init
+terraform plan
+terraform deploy
+```
+
+# Highlights
+  - Automated cert creation and signing.
+  - Automated TLS rotation by Cert Manager.
+  - Long-lived CA by default (20 Years).
+  - Modular Kubernetes related configurations.
+  - Modular Helm artifact version.
+  - Saves time.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
