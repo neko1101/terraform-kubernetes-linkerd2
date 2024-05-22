@@ -2,7 +2,7 @@
 # Usage:
 #   helm install -f values.yaml -f values-ha.yaml
 
-enablePodAntiAffinity: true
+enablePodAntiAffinity: false
 enablePodDisruptionBudget: true
 
 # nodeAffinity:
@@ -18,7 +18,7 @@ resources: &ha_resources
 
 # tap configuration
 tap:
-  replicas: 3
+  replicas: 1
   resources: *ha_resources
 
 # web configuration
