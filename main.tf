@@ -87,11 +87,6 @@ resource "helm_release" "linkerd_control_plane" {
     value = "true"
   }
 
-  set {
-    name  = "controllerReplicas"
-    value = var.control_plane_replica_count
-  }
-
   set_sensitive {
     name  = "identityTrustAnchorsPEM"
     value = data.kubernetes_secret.linkerd_identity_issuer_certificate.data["ca.crt"]
@@ -125,16 +120,6 @@ resource "helm_release" "linkerd_control_plane" {
   set_sensitive {
     name  = "profileValidator.caBundle"
     value = data.kubernetes_secret.linkerd_sp_validator_certificate.data["ca.crt"]
-  }
-
-  set {
-    name  = "enablePodAntiAffinity"
-    value = var.control_plane_enable_pod_anti_affinity
-  }
-
-  set {
-    name  = "enablePodDisruptionBudget"
-    value = var.control_plane_enable_pod_distruption_budget
   }
 
   set_sensitive {
@@ -171,18 +156,8 @@ resource "helm_release" "linkerd_viz" {
   }
 
   set {
-    name  = "tap.replicas"
-    value = var.tap_replica_count
-  }
-
-  set {
     name  = "tapInjector.externalSecret"
     value = "true"
-  }
-
-  set {
-    name  = "tapInjector.replicas"
-    value = var.tap_replica_count
   }
 
   set_sensitive {
@@ -193,26 +168,6 @@ resource "helm_release" "linkerd_viz" {
   set_sensitive {
     name  = "tapInjector.caBundle"
     value = data.kubernetes_secret.linkerd_tap_injector_certificate.data["ca.crt"]
-  }
-
-  set {
-    name  = "dashboard.replicas"
-    value = var.dashboard_replica_count
-  }
-
-  set {
-    name  = "metricsAPI.replicas"
-    value = var.metrics_replica_count
-  }
-
-  set {
-    name  = "enablePodAntiAffinity"
-    value = var.viz_enable_pod_anti_affinity
-  }
-
-  set {
-    name  = "enablePodDisruptionBudget"
-    value = var.viz_enable_pod_distruption_budget
   }
 
   depends_on = [

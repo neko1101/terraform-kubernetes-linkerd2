@@ -18,13 +18,15 @@ terraform {
 provider "time" {}
 
 provider "kubernetes" {
-  config_path    = var.kubernetes.config_path
-  config_context = var.kubernetes.config_context
+  host                   = var.kubernetes.host
+  cluster_ca_certificate = var.kubernetes.cluster_ca_certificate
+  token                  = var.kubernetes.token
 }
 
 provider "helm" {
   kubernetes {
-    config_path    = var.kubernetes.config_path
-    config_context = var.kubernetes.config_context
+    host                   = var.kubernetes.host
+    cluster_ca_certificate = var.kubernetes.cluster_ca_certificate
+    token                  = var.kubernetes.token
   }
 }
