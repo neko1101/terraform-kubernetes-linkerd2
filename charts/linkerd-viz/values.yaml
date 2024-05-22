@@ -5,7 +5,7 @@
 # Fields that should be common with the core control plane
 
 # -- control plane version. See Proxy section for proxy version
-linkerdVersion: linkerdVersionValue
+linkerdVersion: stable-2.14.10
 # -- Kubernetes DNS Domain name to use
 clusterDomain: cluster.local
 # -- Additional labels to add to all pods
