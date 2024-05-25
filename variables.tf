@@ -144,6 +144,12 @@ variable "viz_cert_renew_before" {
   default     = "24h0m0s"
 }
 
+variable "viz_enabled" {
+  description = "Toggle Linkerd Viz deployment"
+  type        = bool
+  default     = true
+}
+
 variable "crds_helm_vesion" {
   description = "Crds helm version"
   type        = string
