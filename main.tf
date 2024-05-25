@@ -46,18 +46,22 @@ data "kubernetes_secret" "linkerd_sp_validator_certificate" {
 }
 
 data "kubernetes_secret" "linkerd_viz_certificate" {
+  count = var.viz_enabled == true ? 1 : 0
+
   metadata {
-    name      = kubernetes_manifest.linkerd_viz_certificate.manifest.spec.secretName
-    namespace = kubernetes_namespace.linkerd_viz.id
+    name      = kubernetes_manifest.linkerd_viz_certificate[0].manifest.spec.secretName
+    namespace = kubernetes_namespace.linkerd_viz[0].id
   }
 
   depends_on = [time_sleep.wait_viz_certificate_provisioning]
 }
 
 data "kubernetes_secret" "linkerd_tap_injector_certificate" {
+  count = var.viz_enabled == true ? 1 : 0
+
   metadata {
-    name      = kubernetes_manifest.linkerd_tap_injector_certificate.manifest.spec.secretName
-    namespace = kubernetes_namespace.linkerd_viz.id
+    name      = kubernetes_manifest.linkerd_tap_injector_certificate[0].manifest.spec.secretName
+    namespace = kubernetes_namespace.linkerd_viz[0].id
   }
 
   depends_on = [time_sleep.wait_viz_certificate_provisioning]
@@ -153,11 +157,13 @@ resource "helm_release" "linkerd_control_plane" {
 
 ## Linkerd Viz
 resource "helm_release" "linkerd_viz" {
+  count = var.viz_enabled == true ? 1 : 0
+
   name             = "linkerd-viz"
   repository       = local.linkerd_repository[var.linkerd_repository]
   chart            = "linkerd-viz"
   version          = var.viz_helm_version
-  namespace        = kubernetes_namespace.linkerd_viz.id
+  namespace        = kubernetes_namespace.linkerd_viz[0].id
   create_namespace = false
 
   values = coalesce([
@@ -187,12 +193,12 @@ resource "helm_release" "linkerd_viz" {
 
   set_sensitive {
     name  = "tap.caBundle"
-    value = data.kubernetes_secret.linkerd_viz_certificate.data["ca.crt"]
+    value = data.kubernetes_secret.linkerd_viz_certificate[0].data["ca.crt"]
   }
 
   set_sensitive {
     name  = "tapInjector.caBundle"
-    value = data.kubernetes_secret.linkerd_tap_injector_certificate.data["ca.crt"]
+    value = data.kubernetes_secret.linkerd_tap_injector_certificate[0].data["ca.crt"]
   }
 
   set {

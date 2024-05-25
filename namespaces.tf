@@ -16,6 +16,8 @@ resource "kubernetes_namespace" "linkerd" {
 }
 
 resource "kubernetes_namespace" "linkerd_viz" {
+  count = var.viz_enabled == true ? 1 : 0
+
   metadata {
     name = var.viz_namespace
     labels = {
