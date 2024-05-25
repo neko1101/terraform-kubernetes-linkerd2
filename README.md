@@ -110,6 +110,7 @@ No modules.
 | <a name="input_viz_cert_renew_before"></a> [viz\_cert\_renew\_before](#input\_viz\_cert\_renew\_before) | Viz TLS cert renew before eg: 1h0m0s | `string` | `"24h0m0s"` | no |
 | <a name="input_viz_enable_pod_anti_affinity"></a> [viz\_enable\_pod\_anti\_affinity](#input\_viz\_enable\_pod\_anti\_affinity) | Viz enable podAntiAffinity | `bool` | `false` | no |
 | <a name="input_viz_enable_pod_distruption_budget"></a> [viz\_enable\_pod\_distruption\_budget](#input\_viz\_enable\_pod\_distruption\_budget) | Viz enable podDisruptionBudget | `bool` | `false` | no |
+| <a name="input_viz_enabled"></a> [viz\_enabled](#input\_viz\_enabled) | Toggle Linkerd Viz deployment | `bool` | `true` | no |
 | <a name="input_viz_helm_version"></a> [viz\_helm\_version](#input\_viz\_helm\_version) | Viz helm version | `string` | `"30.12.10"` | no |
 | <a name="input_viz_namespace"></a> [viz\_namespace](#input\_viz\_namespace) | Viz namespace | `string` | `"linkerd-viz"` | no |
 | <a name="input_webhook_ca_validity"></a> [webhook\_ca\_validity](#input\_webhook\_ca\_validity) | Webhook Issuer CA validity in hours eg: 175200 for 20 years | `string` | `"175200"` | no |
