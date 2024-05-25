@@ -26,7 +26,7 @@ resource "tls_self_signed_cert" "linkerd_viz_root_ca" {
 
 resource "kubernetes_secret" "linkerd_viz_root_ca" {
   count = var.viz_enabled == true ? 1 : 0
-  
+
   metadata {
     name      = "webhook-issuer-tls"
     namespace = kubernetes_namespace.linkerd_viz[0].id
